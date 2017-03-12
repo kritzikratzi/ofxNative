@@ -10,9 +10,11 @@ Native functions for openFrameworks
 	✓ = Implemented
 	𐄂 = Missing
 
-|Method|Description|Windows|OSX|
-|-|-|-|-|
-|`showFile(string path)`|Reveals a file in explorer/finder|𐄂|✓|
+
+Method|Description|Windows|OSX
+-------|------------------|---|---
+`showFile(string path)`|Reveals a file in explorer/finder|𐄂|✓
+
 
 ## Contributing 
 
