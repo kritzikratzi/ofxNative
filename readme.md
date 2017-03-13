@@ -14,6 +14,7 @@ Native functions for openFrameworks
 Method|Description|Windows|OSX
 -------|------------------|---|---
 `showFile(string path)`|Reveals a file in explorer/finder|𐄂|✓
+`openFile(string path)`|Opens a file with the default application|✓|✓
 
 
 ## Contributing 

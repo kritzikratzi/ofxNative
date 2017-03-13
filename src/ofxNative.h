@@ -8,7 +8,8 @@
 namespace ofxNative{
 	
 	// shows a file in finder/explorer
-	// implemented for: OSX
 	void showFile( string path );
 	
+	// opens a file with the default application
+	void openFile( string path ); 
 }

@@ -11,3 +11,10 @@ void ofxNative::showFile( string path ){
 	NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
 }
+
+
+
+void ofxNative::openFile( string path ){
+	NSString * file = [NSString stringWithUTF8String:path.c_str()];
+	[[NSWorkspace sharedWorkspace] openFile:file];
+}
