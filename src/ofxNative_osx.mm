@@ -21,14 +21,3 @@ void ofxNative::openFile( string path ){
 	[[NSWorkspace sharedWorkspace] openFile:file];
 }
 
-
-void ofxNative::setCursor(ofxNative::CursorType cursor){
-	switch(cursor){
-		case kCursorTypeDefault:
-			[[NSCursor arrowCursor] set];
-			break;
-		case kCursorTypeHand:
-			[[NSCursor pointingHandCursor] set];
-			break;
-	}
-}

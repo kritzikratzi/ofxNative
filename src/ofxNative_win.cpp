@@ -55,16 +55,5 @@ void ofxNative::openFile( string filename ){
 }
 
 
-void ofxNative::setCursor(ofxNative::CursorType cursor){
-	switch (cursor) {
-	case kCursorTypeDefault:
-			SetCursor(LoadCursor(nullptr, IDC_ARROW));
-			break;
-	case kCursorTypeHand:
-			SetCursor(LoadCursor(nullptr, IDC_HAND));
-			break;
-	}
-}
-
 
 #endif
