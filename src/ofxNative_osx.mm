@@ -21,3 +21,15 @@ void ofxNative::openFile( string path ){
 	[[NSWorkspace sharedWorkspace] openFile:file];
 }
 
+
+void ofxNative::maximizeWindow( ofAppGLFWWindow & window ){
+	NSWindow * cocoaWindow = (NSWindow*)window.getCocoaWindow();
+	[cocoaWindow setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+}
+
+
+void ofxNative::setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, int minHeight ){
+	NSWindow * cocoaWindow = (NSWindow*)window.getCocoaWindow();
+	[cocoaWindow setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+	[cocoaWindow setMinSize:NSMakeSize(minWidth,minHeight)];
+}

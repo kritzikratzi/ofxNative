@@ -22,6 +22,7 @@ static std::string convertWideToNarrow(const wchar_t *s, char dfault = '?',
 	return stm.str();
 }
 
+
 // utf-8 to utf-16
 static std::wstring convertNarrowToWide(const std::string& as) {
 	// deal with trivial case of empty string
@@ -40,6 +41,7 @@ static std::wstring convertNarrowToWide(const std::string& as) {
 	return ret;
 }
 
+
 void ofxNative::showFile(string filename) {
 	wstring w = convertNarrowToWide(filename); 
 	ITEMIDLIST *pidl = ILCreateFromPath(w.c_str());
@@ -49,11 +51,23 @@ void ofxNative::showFile(string filename) {
 	}
 }
 
+
 void ofxNative::openFile( string filename ){
 	wstring r = convertNarrowToWide(filename); 
 	ShellExecute(0, 0, r.c_str(), 0, 0, SW_SHOW);
 }
 
+
+void ofxNative::maximizeWindow( ofAppGLFWWindow & window ){
+	HWND w32Window = window.getWin32Window();
+	ShowWindow(w32Window, SW_MAXIMIZE);
+}
+
+
+void ofxNative::setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, int minHeight ){
+	// not implemented
+	cerr << "ofxNative::setMinimumSize() not implemented for Windows" << endl;
+}
 
 
 #endif
