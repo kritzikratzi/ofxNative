@@ -19,4 +19,8 @@ namespace ofxNative{
 	// sets the minimum size for a GLFWWindow
 	void setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, int minHeight );
 	
+	// moves the mouse to a location relative the window coordinates
+	// eg setMousePositionRelativeToWindow({10+ofGetMouseX(),ofGetMouseY()}) moves it 10px to the right.
+	// funny issues might arise with retina screens.
+	void setMousePositionRelativeToWindow( ofVec2f pos );
 }

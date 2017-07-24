@@ -33,3 +33,27 @@ void ofxNative::setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, in
 	[cocoaWindow setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
 	[cocoaWindow setMinSize:NSMakeSize(minWidth,minHeight)];
 }
+
+
+void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
+#ifdef TARGET_OSX
+	ofVec2f cgPos =  pos + ofVec2f(ofGetWindowPositionX(),ofGetWindowPositionY());
+	CGWarpMouseCursorPosition(CGPointMake(cgPos.x, cgPos.y));
+	// additionally fake the event for OF
+	if(ofGetMousePressed()){
+		int buttonIdx = 0;
+		for( int i = 0; i < 30; i++){
+			if(ofGetMousePressed(i)){
+				buttonIdx = i;
+				break;
+			}
+		}
+		ofEvents().notifyMouseDragged(pos.x, pos.y, buttonIdx);
+	}
+	else{
+		ofEvents().notifyMouseMoved(pos.x, pos.y);
+	}
+#endif
+}
+
+

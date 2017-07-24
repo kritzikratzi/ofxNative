@@ -70,4 +70,10 @@ void ofxNative::setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, in
 }
 
 
+void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
+	// not implemented
+	cerr << "ofxNative::setMousePositionRelativeToWindow() not implemented for Windows" << endl;
+}
+
+
 #endif
