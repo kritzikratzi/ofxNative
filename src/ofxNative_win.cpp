@@ -70,6 +70,14 @@ void ofxNative::setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, in
 }
 
 
+void ofxNative::setWindowAlwaysOnTop(ofAppBaseWindow & window, bool onTop){
+		HWND w32Window = window.getWin32Window();
+		RECT rect;
+		GetWindowRect(w32Window, &rect);
+		SetWindowPos(w32Window, HWND_TOPMOST, rect.left,rect.top, rect.right-rect.left,rect.bottom-rect.top, SWP_SHOWWINDOW);
+}
+
+
 void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
 	// not implemented
 	cerr << "ofxNative::setMousePositionRelativeToWindow() not implemented for Windows" << endl;

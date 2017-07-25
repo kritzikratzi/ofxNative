@@ -34,9 +34,13 @@ void ofxNative::setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, in
 	[cocoaWindow setMinSize:NSMakeSize(minWidth,minHeight)];
 }
 
+void ofxNative::setWindowAlwaysOnTop(ofAppBaseWindow & window, bool onTop){
+		NSWindow * cocoaWindow = (NSWindow*)window.getCocoaWindow();
+		[cocoaWindow setLevel:onTop?(NSFloatingWindowLevel):(NSNormalWindowLevel)];
+}
+
 
 void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
-#ifdef TARGET_OSX
 	ofVec2f cgPos =  pos + ofVec2f(ofGetWindowPositionX(),ofGetWindowPositionY());
 	CGWarpMouseCursorPosition(CGPointMake(cgPos.x, cgPos.y));
 	// additionally fake the event for OF
@@ -53,7 +57,6 @@ void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
 	else{
 		ofEvents().notifyMouseMoved(pos.x, pos.y);
 	}
-#endif
 }
 
 
