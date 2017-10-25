@@ -44,7 +44,7 @@ static std::wstring convertNarrowToWide(const std::string& as) {
 
 void ofxNative::showFile(string filename) {
 	wstring w = convertNarrowToWide(filename); 
-	ITEMIDLIST *pidl = ILCreateFromPath(w.c_str());
+	PIDLIST_ABSOLUTE pidl = ILCreateFromPath(w.c_str());
 	if (pidl) {
 		SHOpenFolderAndSelectItems(pidl, 0, 0, 0);
 		ILFree(pidl);
