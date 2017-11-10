@@ -26,4 +26,7 @@ namespace ofxNative{
 	// eg setMousePositionRelativeToWindow({10+ofGetMouseX(),ofGetMouseY()}) moves it 10px to the right.
 	// funny issues might arise with retina screens.
 	void setMousePositionRelativeToWindow( ofVec2f pos );
+	
+	// sets the name of the current thread
+	void setThreadName( const string & name );
 }

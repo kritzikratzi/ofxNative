@@ -4,6 +4,7 @@
 
 #include "ofxNative.h"
 #include <Cocoa/Cocoa.h>
+#include <pthread/pthread.h>
 
 using namespace ofxNative;
 
@@ -59,4 +60,9 @@ void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
 	}
 }
 
+// thread naming code from https://stackoverflow.com/a/23899379/347508
+
+void ofxNative::setThreadName(const string & name){
+	pthread_setname_np(name.c_str());
+}
 
