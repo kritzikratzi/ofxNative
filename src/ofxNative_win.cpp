@@ -104,6 +104,7 @@ void ofxNative::setThreadName( const string & name){
 	info.dwThreadID = dwThreadID;
 	info.dwFlags = 0;
 	
+	const DWORD MS_VC_EXCEPTION = 0x406D1388;
 	__try{
 		RaiseException( MS_VC_EXCEPTION, 0, sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info );
 	}
