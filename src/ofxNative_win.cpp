@@ -112,4 +112,17 @@ void ofxNative::setThreadName( const string & name){
 	}
 }
 
+bool ofxNative::canShowConsole() {
+	return true; 
+}
+
+bool  ofxNative::getConsoleVisible() {
+	return (::IsWindowVisible(::GetConsoleWindow()) != FALSE);
+}
+
+void ofxNative::setConsoleVisible(bool show) {
+	::ShowWindow(::GetConsoleWindow(), show?SW_SHOW:SW_HIDE);
+}
+
+
 #endif

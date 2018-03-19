@@ -66,3 +66,16 @@ void ofxNative::setThreadName(const string & name){
 	pthread_setname_np(name.c_str());
 }
 
+
+bool ofxNative::canShowConsole() {
+	return false; 
+}
+
+bool ofxNative::getConsoleVisible() {
+	return false; 
+}
+
+void ofxNative::setConsoleVisible(bool show) {
+	// do nothing, because we can't
+}
+

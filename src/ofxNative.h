@@ -29,4 +29,14 @@ namespace ofxNative{
 	
 	// sets the name of the current thread
 	void setThreadName( const string & name );
+
+	// checks if a system console (where cout goes) is visible or not
+	// for now, this is only visible in windows 
+	bool canShowConsole(); 
+
+	// checks if the console window is visible
+	bool getConsoleVisible(); 
+
+	// shows/hides the system console (for now only windows) 
+	void setConsoleVisible(bool show); 
 }
