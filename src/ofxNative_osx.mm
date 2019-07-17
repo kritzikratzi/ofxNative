@@ -79,3 +79,11 @@ void ofxNative::setConsoleVisible(bool show) {
 	// do nothing, because we can't
 }
 
+std::string ofxNative::getSystemDataFolder(){
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *appName=[[[NSBundle mainBundle] infoDictionary]  objectForKey:(id)kCFBundleIdentifierKey];
+	NSString *applicationSupportDirectory = [[paths firstObject] stringByAppendingPathComponent:appName];
+	NSString *path = [applicationSupportDirectory stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
+	const char * absPath = [path UTF8String];
+	return string(absPath);
+}

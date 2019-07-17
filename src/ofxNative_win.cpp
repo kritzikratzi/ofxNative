@@ -1,14 +1,16 @@
-#include "ofxNative.h"
-
 #ifdef _WIN32
 
+#include "ofxNative.h"
+using namespace ofxNative;
+
+
+#include <windows.h>
 #include <winuser.h>
 #include <commdlg.h>
 #define _WIN32_DCOM
-#include <windows.h>
 #include <shlobj.h>
+#include <ShObjIdl.h>
 
-using namespace ofxNative;
 
 // utf-16 to utf-8
 static std::string convertWideToNarrow(const wchar_t *s, char dfault = '?',
@@ -41,6 +43,18 @@ static std::wstring convertNarrowToWide(const std::string& as) {
 	return ret;
 }
 
+std::string getExecutablePath() {
+	// https://stackoverflow.com/a/33613252/347508
+	std::vector<wchar_t> pathBuf;
+	DWORD copied = 0;
+	do {
+		pathBuf.resize(pathBuf.size() + MAX_PATH);
+		copied = GetModuleFileNameW(0, &pathBuf.at(0), pathBuf.size());
+	} while (copied >= pathBuf.size());
+
+	pathBuf.resize(copied);
+	return convertWideToNarrow(pathBuf.data());
+}
 
 void ofxNative::showFile(string filename) {
 	// argh, something is very wrong here! 
@@ -126,5 +140,16 @@ void ofxNative::setConsoleVisible(bool show) {
 	::ShowWindow(::GetConsoleWindow(), show?SW_SHOW:SW_HIDE);
 }
 
+std::string ofxNative::getSystemDataFolder() {
+	TCHAR szPath[4096];
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, szPath))) {
+		string dirname = convertWideToNarrow(szPath) + "\\" + ofFile(getExecutablePath(),ofFile::Reference).getBaseName();
+		ofDirectory(dirname).create(); 
+		return dirname; 
+	}
+	else {
+		return ofToDataPath("");
+	}
+}
 
 #endif
