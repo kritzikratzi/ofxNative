@@ -43,7 +43,9 @@ static std::wstring convertNarrowToWide(const std::string& as) {
 
 
 void ofxNative::showFile(string filename) {
-	wstring w = convertNarrowToWide(filename); 
+	// argh, something is very wrong here! 
+	ofStringReplace(filename, ":/", ":\\"); 
+	wstring w = convertNarrowToWide(filename);
 	PIDLIST_ABSOLUTE pidl = ILCreateFromPath(w.c_str());
 	if (pidl) {
 		SHOpenFolderAndSelectItems(pidl, 0, 0, 0);
