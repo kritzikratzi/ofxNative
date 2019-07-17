@@ -39,4 +39,14 @@ namespace ofxNative{
 
 	// shows/hides the system console (for now only windows) 
 	void setConsoleVisible(bool show); 
+
+	// returns a path where the application can safely write data (usually) outside of the OF application
+	// this is great for settings files and the like.
+	// for osx this is ~/Library/Application Support directory/<bundle-identifier>
+	//                 or ~/Library/Containers/<bundle-identifier>/
+	// for windows this is %APPDATA%/<app-name>
+	// on linux, or in case something goes wrong, this returns just the default data folder (this behavior might change!)
+	std::string getSystemDataFolder(); 
+
+
 }
