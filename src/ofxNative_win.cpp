@@ -10,7 +10,7 @@ using namespace ofxNative;
 #define _WIN32_DCOM
 #include <shlobj.h>
 #include <ShObjIdl.h>
-
+#include <shellapi.h>s
 
 // utf-16 to utf-8
 static std::string convertWideToNarrow(const wchar_t *s, char dfault = '?',
