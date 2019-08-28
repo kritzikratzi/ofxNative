@@ -1,11 +1,10 @@
 #ifdef __linux__
 
 #include "ofxNative.h"
-using namespace ofxNative;
+#include <pthread.h>
+#include <cstdlib>
 
-std::string getExecutablePath() {
-	return std::string(getcwd(nullptr, 0));
-}
+using namespace ofxNative;
 
 void ofxNative::showFile(string filename) {
 	pid_t pid = fork();
@@ -16,7 +15,7 @@ void ofxNative::showFile(string filename) {
 }
 
 
-void ofxNative::openFile( string filename ){
+void ofxNative::openFile(string filename){
 	pid_t pid = fork();
 	if (pid == 0) {
 		execl("/usr/bin/xdg-open", "xdg-open", filename.c_str(), (char *)0);
@@ -49,9 +48,8 @@ void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
 }
 
 
-void ofxNative::setThreadName( const string & name){
-	// not implemented
-	cerr << "ofxNative::setThreadName() not implemented for Linux" << endl;
+void ofxNative::setThreadName(const string & name){
+	pthread_setname_np(name.c_str());
 }
 
 bool ofxNative::canShowConsole() {
@@ -69,8 +67,24 @@ void ofxNative::setConsoleVisible(bool show) {
 	cerr << "ofxNative::setConsoleVisible() not implemented for Linux" << endl;
 }
 
-std::string ofxNative::getSystemDataFolder() {
-	return ofToDataPath("");
+:string getSystemDataPrefix() {
+	if (const char* data = getenv("XDG_DATA_HOME"))
+		return std::string(data) + "/Oscilloscope";
+
+	if (const char* home = getenv("HOME"))
+		return std::string(home) + "/.local/share/Oscilloscope;
+
+	return "";
+}
+
+string ofxNative::getSystemDataFolder() {
+	string prefix = getSystemDataPrefix();
+	if (prefix.empty())
+		return ofToDataPath("");
+
+	string dirname = prefix + ofFile(getExecutablePath(),ofFile::Reference).getBaseName();
+	ofDirectory(dirname).create();
+	return dirname;
 }
 
 #endif

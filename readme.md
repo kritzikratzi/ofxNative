@@ -24,7 +24,7 @@ Method|Description|Windows|OSX|Linux
 `canShowConsole()`|Checks if there is a attached system console that can be shown/hidden|✓|✗|✗
 `getConsoleVisible()`|Returns true if the console is visible|✓|✗|✗
 `setConsoleVisible(bool show)`|Shows/Hides the windows system console. This requires the linker flag `subsystem:console`|✓|✗|✗
-`getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, %APPDATA% on windows)|✓|✓|✓<sup>2</sup>
+`getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, %APPDATA% on windows)|✓|✓|✓
 
 1. same Behaviour as `openFile()`
 2. returns binary folder
