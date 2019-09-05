@@ -8,7 +8,6 @@ Native functions for openFrameworks
 
 
 	✓  = Implemented
-	✓? = Implemented, could/should work, but untested
 	✗  = Missing (implemented, but does nothing... calling it won't hurt)
 
 
@@ -24,8 +23,9 @@ Method|Description|Windows|OSX|Linux
 `canShowConsole()`|Checks if there is a attached system console that can be shown/hidden|✓|✗|✗
 `getConsoleVisible()`|Returns true if the console is visible|✓|✗|✗
 `setConsoleVisible(bool show)`|Shows/Hides the windows system console. This requires the linker flag `subsystem:console`|✓|✗|✗
-`getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, %APPDATA% on windows, data folder on linux)|✓|✓|✗
+`getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, `%APPDATA%` on windows), `~/.local/share` on linux|✓|✓|✓
 
+2. returns binary folder
 
 ## Contributing
 

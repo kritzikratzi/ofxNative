@@ -1,22 +1,39 @@
 #ifdef __linux__
 
 #include "ofxNative.h"
+#include <pthread.h>
+#include <cstdlib>
+
 using namespace ofxNative;
 
-std::string getExecutablePath() {
-	return std::string(getcwd(nullptr, 0));
+string getExecutableName() {
+	char exe[1024];
+	int len = readlink("/proc/self/exe",exe,sizeof(exe)-1);
+
+	if (len < 0) 
+		return "ofApp";
+
+	exe[len] = 0;
+	char* basename = g_path_get_basename(exe);
+	string name(basename);
+	free(basename);
+
+	return name;
 }
+
 
 void ofxNative::showFile(string filename) {
 	pid_t pid = fork();
 	if (pid == 0) {
-		execl("/usr/bin/xdg-open", "xdg-open", filename.c_str(), (char *)0);
+		char* dir = g_path_get_dirname(filename.c_str());
+		execl("/usr/bin/xdg-open", "xdg-open", dir, (char *)0);
+		free(dir);
 		exit(1);
 	}
 }
 
 
-void ofxNative::openFile( string filename ){
+void ofxNative::openFile(string filename){
 	pid_t pid = fork();
 	if (pid == 0) {
 		execl("/usr/bin/xdg-open", "xdg-open", filename.c_str(), (char *)0);
@@ -49,9 +66,8 @@ void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
 }
 
 
-void ofxNative::setThreadName( const string & name){
-	// not implemented
-	cerr << "ofxNative::setThreadName() not implemented for Linux" << endl;
+void ofxNative::setThreadName(const string & name){
+	pthread_setname_np(pthread_self(), name.c_str());
 }
 
 bool ofxNative::canShowConsole() {
@@ -69,8 +85,24 @@ void ofxNative::setConsoleVisible(bool show) {
 	cerr << "ofxNative::setConsoleVisible() not implemented for Linux" << endl;
 }
 
-std::string ofxNative::getSystemDataFolder() {
-	return ofToDataPath("");
+string getSystemDataPrefix() {
+	if (const char* data = getenv("XDG_DATA_HOME"))
+		return std::string(data) + "/";
+
+	if (const char* home = getenv("HOME"))
+		return std::string(home) + "/.local/share/";
+
+	return "";
+}
+
+string ofxNative::getSystemDataFolder() {
+	string prefix = getSystemDataPrefix();
+	if (prefix.empty())
+		return ofToDataPath("");
+
+	string dirname = prefix + getExecutableName();
+	ofDirectory(dirname).create();
+	return dirname;
 }
 
 #endif
