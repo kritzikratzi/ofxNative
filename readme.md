@@ -25,6 +25,7 @@ Method|Description|Windows|OSX
 `getConsoleVisible()`|Returns true if the console is visible|✓|✗
 `setConsoleVisible(bool show)`|Shows/Hides the windows system console. This requires the linker flag `subsystem:console`|✓|✗
 `getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, %APPDATA% on windows)|✓|✓
+`getSystemDocumentsFolder()`|Returns the location of the user's documents folder|untested|✓
 
 
 ## Contributing

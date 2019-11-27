@@ -86,3 +86,10 @@ std::string ofxNative::getSystemDataFolder(){
 	const char * absPath = [applicationSupportDirectory UTF8String];
 	return string(absPath);
 }
+
+std::string ofxNative::getSystemDocumentsFolder(){
+	NSArray * paths = NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString * documentsDirectory = [paths objectAtIndex:0];
+	const char * absPath = [documentsDirectory UTF8String];
+	return string(absPath);
+}

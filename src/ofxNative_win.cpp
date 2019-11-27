@@ -144,12 +144,26 @@ std::string ofxNative::getSystemDataFolder() {
 	TCHAR szPath[4096];
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, szPath))) {
 		string dirname = convertWideToNarrow(szPath) + "\\" + ofFile(getExecutablePath(),ofFile::Reference).getBaseName();
-		ofDirectory(dirname).create(); 
-		return dirname; 
+		ofDirectory(dirname).create();
+		return dirname;
 	}
 	else {
 		return ofToDataPath("");
 	}
 }
+
+std::string ofxNative::getSystemDocumentsFolder() {
+	TCHAR szPath[4096];
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, szPath))) {
+		string dirname = convertWideToNarrow(szPath);
+		ofDirectory(dirname).create();
+		return dirname;
+	}
+	else {
+		return ofToDataPath("");
+	}
+}
+
+
 
 #endif

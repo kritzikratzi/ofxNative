@@ -46,7 +46,9 @@ namespace ofxNative{
 	//                 or ~/Library/Containers/<bundle-identifier>/
 	// for windows this is %APPDATA%/<app-name>
 	// on linux, or in case something goes wrong, this returns just the default data folder (this behavior might change!)
-	std::string getSystemDataFolder(); 
-
+	std::string getSystemDataFolder();
+	
+	// Returns the path to some kind of documents folder
+	std::string getSystemDocumentsFolder();
 
 }
