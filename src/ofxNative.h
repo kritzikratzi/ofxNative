@@ -13,6 +13,9 @@ namespace ofxNative{
 	// opens a file with the default application
 	void openFile( string path );
 	
+	// opens a url in the browser
+	void openUrl( string url ); 
+	
 	// maximizes a GLFWWindow on the current screen
 	void maximizeWindow( ofAppGLFWWindow & window );
 	

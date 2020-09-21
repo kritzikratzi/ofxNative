@@ -41,6 +41,14 @@ void ofxNative::openFile(string filename){
 	}
 }
 
+void ofxNative::openUrl(string url){
+	pid_t pid = fork();
+	if (pid == 0) {
+		execl("/usr/bin/xdg-open", "xdg-open", url.c_str(), (char *)0);
+		exit(1);
+	}
+}
+
 
 void ofxNative::maximizeWindow( ofAppGLFWWindow & window ){
 	// not implemented

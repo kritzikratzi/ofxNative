@@ -69,8 +69,13 @@ void ofxNative::showFile(string filename) {
 
 
 void ofxNative::openFile( string filename ){
-	wstring r = convertNarrowToWide(filename); 
+	wstring r = convertNarrowToWide(filename);
 	ShellExecute(0, 0, r.c_str(), 0, 0, SW_SHOW);
+}
+
+void ofxNative::openUrl( string url ){
+	wstring r = convertNarrowToWide(url);
+	ShellExecute(0, L"open", r.c_str(), 0, 0, SW_SHOWNORMAL);
 }
 
 

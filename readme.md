@@ -16,6 +16,7 @@ Method|Description|Windows|OSX|Linux
 -------|------------------|---|---|---
 `showFile(string path)`|Reveals a file in explorer/finder|✓|✓|✓
 `openFile(string path)`|Opens a file with the default application|✓|✓|✓
+`openUrl(string path)`|Opens a url with the default browser|✓|✓|✓
 `setMinimumWindowSize(GLFWWindow & window, int w, int h)`|Sets the minimum size of a window|✗|✓|✗
 `setWindowAlwaysOnTop(GLFWWindow & window, bool onTop)`|Toggles "float on top" for a window|✓|✓|✗
 `maximizeWindow(GLFWWindow & window)`|Maximizes the window|✓|✓|✗

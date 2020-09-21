@@ -5,6 +5,7 @@
 #include "ofxNative.h"
 #include <Cocoa/Cocoa.h>
 #include <pthread/pthread.h>
+#include <Foundation/Foundation.h>
 
 using namespace ofxNative;
 
@@ -20,6 +21,12 @@ void ofxNative::showFile( string path ){
 void ofxNative::openFile( string path ){
 	NSString * file = [NSString stringWithUTF8String:path.c_str()];
 	[[NSWorkspace sharedWorkspace] openFile:file];
+}
+
+void ofxNative::openUrl( string url_s ){
+	NSString * url_ns = [NSString stringWithUTF8String:url_s.c_str()];
+	NSURL * url = [NSURL URLWithString:url_ns];
+	[[NSWorkspace sharedWorkspace] openURL:url];
 }
 
 
