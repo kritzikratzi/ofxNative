@@ -1,4 +1,4 @@
-#ifdef _WIN32
+﻿#ifdef _WIN32
 
 #include "ofxNative.h"
 using namespace ofxNative;
@@ -10,7 +10,44 @@ using namespace ofxNative;
 #define _WIN32_DCOM
 #include <shlobj.h>
 #include <ShObjIdl.h>
-#include <shellapi.h>s
+#include <shellapi.h>
+#include <functional>
+
+// urgh... why not! 
+// let's replace the winproc handler...
+typedef function<LRESULT(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)> MessageOverride;
+
+static map<HWND, WNDPROC> original_proc;
+static map<pair<HWND,UINT>, MessageOverride> msg_overrides;
+
+static LRESULT CALLBACK handle_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	auto mit = msg_overrides.find(make_pair(hwnd,msg));
+	if (mit != msg_overrides.end()) {
+		return mit->second(hwnd, msg, wParam, lParam);
+	}
+	auto oit = original_proc.find(hwnd);
+	if (oit != original_proc.end()) {
+		return CallWindowProc(oit->second, hwnd, msg, wParam, lParam);
+	}
+
+	return 0;
+}
+
+static void override_win_proc(HWND hwnd) {
+	auto it = original_proc.find(hwnd);
+	if (it != original_proc.end()) return;
+
+	WNDPROC original = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_WNDPROC); // use GWL_WNDPROC for 32bit
+	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)handle_win_proc);
+	original_proc[hwnd] = original; 
+}
+
+static void override_win_proc(HWND hwnd, UINT msg, MessageOverride func) {
+	override_win_proc(hwnd); 
+	msg_overrides[make_pair(hwnd, msg)] = func; 
+}
+
+
 
 // utf-16 to utf-8
 static std::string convertWideToNarrow(const wchar_t *s, char dfault = '?',
@@ -86,8 +123,13 @@ void ofxNative::maximizeWindow( ofAppGLFWWindow & window ){
 
 
 void ofxNative::setMinimumWindowSize( ofAppGLFWWindow & window, int minWidth, int minHeight ){
-	// not implemented
-	cerr << "ofxNative::setMinimumSize() not implemented for Windows" << endl;
+	HWND w32Window = window.getWin32Window();
+	override_win_proc(w32Window, WM_GETMINMAXINFO, [minWidth, minHeight](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
+		lpMMI->ptMinTrackSize.x = minWidth;
+		lpMMI->ptMinTrackSize.y = minHeight;
+		return 0;
+	});
 }
 
 
