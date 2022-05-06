@@ -109,8 +109,16 @@ string ofxNative::getSystemDataFolder() {
 		return ofToDataPath("");
 
 	string dirname = prefix + getExecutableName();
-	ofDirectory(dirname).create();
+	ofDirectory dir(dirname);
+	if(!dir.exists()) dir.create();
 	return dirname;
+}
+
+std::string ofxNative::getTempFolder(){
+	if (const char* data = getenv("TMPDIR"))
+		return std::string(data) + "/";
+
+	return "/tmp";
 }
 
 #endif

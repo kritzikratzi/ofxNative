@@ -8,7 +8,7 @@ Native functions for openFrameworks
 
 
 	✓  = Implemented
-	✗  = Missing (implemented, but does nothing... calling it won't hurt)
+	✗  = Missing (implemented empty... calling it won't hurt, but does nothing)
 
 
 
@@ -26,8 +26,7 @@ Method|Description|Windows|OSX|Linux
 `setConsoleVisible(bool show)`|Shows/Hides the windows system console. This requires the linker flag `subsystem:console`|✓|✗|✗
 `getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, `%APPDATA%` on windows), `~/.local/share` on linux|✓|✓|✓
 `(getSystemDocumentsFolder)`|Returns the location of the user's documents folder|untested|✓|missing
-
-2. returns binary folder
+`(getTempFolder)`|Path to a system wide temp folder|untested|✓|untested
 
 ## Contributing
 

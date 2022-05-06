@@ -54,4 +54,7 @@ namespace ofxNative{
 	// Returns the path to some kind of documents folder
 	std::string getSystemDocumentsFolder();
 
+	// Returns the path to a temporary folder
+	std::string getTempFolder();
+
 }

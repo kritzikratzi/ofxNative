@@ -203,7 +203,8 @@ std::string ofxNative::getSystemDocumentsFolder() {
 	TCHAR szPath[4096];
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, szPath))) {
 		string dirname = convertWideToNarrow(szPath);
-		ofDirectory(dirname).create();
+		ofDirectory dir(dirname);
+		if(!dir.exists()) dir.create();
 		return dirname;
 	}
 	else {
@@ -211,6 +212,16 @@ std::string ofxNative::getSystemDocumentsFolder() {
 	}
 }
 
+std::string ofxNative::getTempFolder(){
+	TCHAR szPath[4096];
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, szPath))) {
+		string dirname = convertWideToNarrow(szPath);
+		return dirname;
+	}
+	else {
+		return ofToDataPath("");
+	}
+}
 
 
 #endif

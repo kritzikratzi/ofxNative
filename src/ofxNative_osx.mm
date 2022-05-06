@@ -89,8 +89,10 @@ std::string ofxNative::getSystemDataFolder(){
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *appName=[[[NSBundle mainBundle] infoDictionary]  objectForKey:(id)kCFBundleIdentifierKey];
 	NSString *applicationSupportDirectory = [[paths firstObject] stringByAppendingPathComponent:appName];
-	const char * absPath = [applicationSupportDirectory UTF8String];
-	return string(absPath);
+	string absPath([applicationSupportDirectory UTF8String]);
+	ofDirectory dir(absPath);
+	if(!dir.exists()) dir.create();
+	return absPath;
 }
 
 std::string ofxNative::getSystemDocumentsFolder(){
@@ -98,4 +100,8 @@ std::string ofxNative::getSystemDocumentsFolder(){
 	NSString * documentsDirectory = [paths objectAtIndex:0];
 	const char * absPath = [documentsDirectory UTF8String];
 	return string(absPath);
+}
+
+std::string ofxNative::getTempFolder(){
+	return string( NSTemporaryDirectory().UTF8String );
 }
