@@ -1,3 +1,4 @@
+#ifdef __APPLE__
 /**
  * OSX Implementation
  */
@@ -105,3 +106,4 @@ std::string ofxNative::getSystemDocumentsFolder(){
 std::string ofxNative::getTempFolder(){
 	return string( NSTemporaryDirectory().UTF8String );
 }
+#endif
