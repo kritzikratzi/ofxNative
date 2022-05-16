@@ -1,8 +1,11 @@
 ﻿#ifdef _WIN32
 
+#ifndef UNICODE
+#define UNICODE 1
+#endif
+
 #include "ofxNative.h"
 using namespace ofxNative;
-
 
 #include <windows.h>
 #include <winuser.h>
@@ -86,7 +89,7 @@ std::string getExecutablePath() {
 	DWORD copied = 0;
 	do {
 		pathBuf.resize(pathBuf.size() + MAX_PATH);
-		copied = GetModuleFileNameW(0, &pathBuf.at(0), pathBuf.size());
+		copied = GetModuleFileNameW(0, &pathBuf.at(0), (DWORD)pathBuf.size());
 	} while (copied >= pathBuf.size());
 
 	pathBuf.resize(copied);
