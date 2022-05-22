@@ -47,6 +47,20 @@ void ofxNative::setWindowAlwaysOnTop(ofAppBaseWindow & window, bool onTop){
 		[cocoaWindow setLevel:onTop?(NSFloatingWindowLevel):(NSNormalWindowLevel)];
 }
 
+void ofxNative::setWindowRepresentedFilename(ofAppBaseWindow & window, const string & title, const string & filename ){
+	NSWindow * cocoaWindow = (NSWindow*)(window.getCocoaWindow());
+	if(filename == ""){
+		[cocoaWindow setRepresentedFilename:@""];
+		[cocoaWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
+	}
+	else{
+		NSString * file = [NSString stringWithUTF8String:filename.c_str()];
+		NSString * fname = [file pathComponents].lastObject;
+		[cocoaWindow setTitle:fname];
+		[cocoaWindow setRepresentedFilename:file];
+	}
+}
+
 
 void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
 	ofVec2f cgPos =  pos + ofVec2f(ofGetWindowPositionX(),ofGetWindowPositionY());

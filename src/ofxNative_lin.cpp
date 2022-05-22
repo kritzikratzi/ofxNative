@@ -67,6 +67,9 @@ void ofxNative::setWindowAlwaysOnTop(ofAppBaseWindow & window, bool onTop){
 	cerr << "ofxNative::setWindowAlwaysOnTop() not implemented for Linux" << endl;
 }
 
+void ofxNative::setWindowRepresentedFilename(ofAppBaseWindow & window, const string & title, const string & filename ){
+	window.setWindowTitle(filename==""?title:filename);
+}
 
 void ofxNative::setMousePositionRelativeToWindow( ofVec2f pos ){
 	// not implemented

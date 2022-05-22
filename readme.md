@@ -8,7 +8,8 @@ Native functions for openFrameworks
 
 
 	✓  = Implemented
-	✗  = Missing (implemented empty... calling it won't hurt, but does nothing)
+	※  = Uses a workaround, because it doesn't exist in that form for this operating system
+	✗  = Missing (implementation empty... calling it won't hurt, but does nothing)
 
 
 
@@ -19,6 +20,7 @@ Method|Description|Windows|OSX|Linux
 `openUrl(string path)`|Opens a url with the default browser|✓|✓|✓
 `setMinimumWindowSize(GLFWWindow & window, int w, int h)`|Sets the minimum size of a window|✓|✓|✗
 `setWindowAlwaysOnTop(GLFWWindow & window, bool onTop)`|Toggles "float on top" for a window|✓|✓|✗
+`setWindowRepresentedFilename(GLFWWindow & window, string title, string filename)`|Shows title and/or filename|✓|※|※
 `maximizeWindow(GLFWWindow & window)`|Maximizes the window|✓|✓|✗
 `setThreadName(const string & name)`|Sets the name of the current thread. Note:Renaming _other_ threads would be possible in Windows, but not in OSX|✓|✓|✗
 `canShowConsole()`|Checks if there is a attached system console that can be shown/hidden|✓|✗|✗
