@@ -229,5 +229,184 @@ std::string ofxNative::getTempFolder(){
 	}
 }
 
+std::wstring extensions_to_filter(const std::vector<std::string> & extensions) {
+	std::wstring filter;
+
+	if (extensions.size() > 0) {
+		std::wstring open_text = L"Default (";
+		std::wstring open_exts;
+		for (int i = 0; i < extensions.size(); i++) {
+			open_text += (i>0?L", *.":L"*.") + convertNarrowToWide(extensions[i]); 
+			open_exts += (i>0?L";*.":L"*.") + convertNarrowToWide(extensions[i]);
+		}
+		filter = open_text + L")";
+		filter += L'\0';
+		filter += open_exts;
+		filter += L'\0';
+	}
+	filter += L"All Files (*.*)\0*.*\0\0";
+
+	return filter;
+}
+
+// originally from openFrameworks.
+// changed only to include file extensions
+ofFileDialogResult ofxNative::systemLoadDialog(std::string windowTitle, bool bFolderSelection, std::string defaultPath, std::vector<std::string> extensions){
+	ofFileDialogResult results;
+
+	wstring ext_filter = extensions_to_filter(extensions);
+
+	auto loadDialogBrowseCallback = [](
+	  HWND hwnd,
+	  UINT uMsg,
+	  LPARAM lParam,
+	  LPARAM lpData
+	){
+		string defaultPath = *(string*)lpData;
+		if(defaultPath!="" && uMsg==BFFM_INITIALIZED){
+			wchar_t         wideCharacterBuffer[MAX_PATH];
+			wcscpy_s(wideCharacterBuffer, convertNarrowToWide(ofToDataPath(defaultPath)).c_str());
+			SendMessage(hwnd,BFFM_SETSELECTION,1,(LPARAM)wideCharacterBuffer);
+		}
+
+		return 0;
+	};
+
+
+	wstring windowTitleW;
+	windowTitleW.assign(windowTitle.begin(), windowTitle.end());
+
+	if (bFolderSelection == false){
+
+        OPENFILENAME ofn;
+
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(ofn);
+		HWND hwnd = WindowFromDC(wglGetCurrentDC());
+		ofn.hwndOwner = hwnd;
+
+		//the file name and path
+		wchar_t szFileName[MAX_PATH];
+		memset(szFileName, 0, sizeof(szFileName));
+
+		//the dir, if specified
+		wchar_t szDir[MAX_PATH];
+
+		//the title if specified
+		wchar_t szTitle[MAX_PATH];
+		if(defaultPath!=""){
+			wcscpy_s(szDir,convertNarrowToWide(ofToDataPath(defaultPath)).c_str());
+			ofn.lpstrInitialDir = szDir;
+		}
+
+		if (windowTitle != "") {
+			wcscpy_s(szTitle, convertNarrowToWide(windowTitle).c_str());
+			ofn.lpstrTitle = szTitle;
+		} else {
+			ofn.lpstrTitle = nullptr;
+		}
+
+		ofn.lpstrFilter = ext_filter.c_str();
+		ofn.lpstrFile = szFileName;
+		ofn.nMaxFile = MAX_PATH;
+		ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+		ofn.lpstrDefExt = 0;
+		ofn.lpstrTitle = windowTitleW.c_str();
+
+		if(GetOpenFileName(&ofn)) {
+			results.filePath = convertWideToNarrow(szFileName);
+		}
+		else {
+			//this should throw an error on failure unless its just the user canceling out
+			DWORD err = CommDlgExtendedError();
+		}
+
+	} else {
+
+		BROWSEINFOW      bi;
+		wchar_t         wideCharacterBuffer[MAX_PATH];
+		wchar_t			wideWindowTitle[MAX_PATH];
+		LPITEMIDLIST    pidl;
+		LPMALLOC		lpMalloc;
+
+		if (windowTitle != "") {
+			wcscpy_s(wideWindowTitle, convertNarrowToWide(windowTitle).c_str());
+		} else {
+			wcscpy_s(wideWindowTitle, L"Select Directory");
+		}
+
+		// Get a pointer to the shell memory allocator
+		if(SHGetMalloc(&lpMalloc) != S_OK){
+			//TODO: deal with some sort of error here?
+		}
+		bi.hwndOwner        =   nullptr;
+		bi.pidlRoot         =   nullptr;
+		bi.pszDisplayName   =   wideCharacterBuffer;
+		bi.lpszTitle        =   wideWindowTitle;
+		bi.ulFlags          =   BIF_RETURNFSANCESTORS | BIF_RETURNONLYFSDIRS | BIF_USENEWUI;
+		bi.lpfn             =   loadDialogBrowseCallback;
+		bi.lParam           =   (LPARAM) &defaultPath;
+		bi.lpszTitle        =   windowTitleW.c_str();
+
+		if(pidl = SHBrowseForFolderW(&bi)){
+			// Copy the path directory to the buffer
+			if(SHGetPathFromIDListW(pidl,wideCharacterBuffer)){
+				results.filePath = convertWideToNarrow(wideCharacterBuffer);
+			}
+			lpMalloc->Free(pidl);
+		}
+		lpMalloc->Release();
+	}
+
+	if( results.filePath.length() > 0 ){
+		results.bSuccess = true;
+		results.fileName = ofFilePath::getFileName(results.filePath);
+	}
+	
+	return results;
+}
+
+// originally from openFrameworks.
+// changed only to include file extensions
+ofFileDialogResult ofxNative::systemSaveDialog(string defaultName, string messageName, std::vector<std::string> extensions){
+
+	ofFileDialogResult results;
+
+	wstring ext_filter = extensions_to_filter(extensions); 
+
+	// slightly special behavior, but it's the best i could think of for windows... 
+	wstring ext_def = L"";
+	if (extensions.size() == 1) {
+		ext_def = convertNarrowToWide(extensions[0]);
+	}
+
+
+	wchar_t fileName[MAX_PATH] = L"";
+	OPENFILENAMEW ofn;
+    memset(&ofn, 0, sizeof(OPENFILENAME));
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	HWND hwnd = WindowFromDC(wglGetCurrentDC());
+	ofn.hwndOwner = hwnd;
+	ofn.hInstance = GetModuleHandle(0);
+	ofn.nMaxFileTitle = 31;
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFilter = ext_filter.c_str();
+	ofn.lpstrDefExt = ext_def.c_str();	// we could do .rxml here?
+
+	ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
+	ofn.lpstrTitle = L"Select Output File";
+
+	if (GetSaveFileNameW(&ofn)){
+		results.filePath = convertWideToNarrow(fileName);
+	}
+
+	if( results.filePath.length() > 0 ){
+		results.bSuccess = true;
+		results.fileName = ofFilePath::getFileName(results.filePath);
+	}
+
+	return results;
+}
 
 #endif

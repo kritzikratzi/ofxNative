@@ -10,6 +10,9 @@
 
 using namespace ofxNative;
 
+static void restoreAppWindowFocus();
+
+
 void ofxNative::showFile( string path ){
 	NSString * file = [NSString stringWithUTF8String:path.c_str()];
 	NSURL * url = [NSURL fileURLWithPath:file];
@@ -120,4 +123,98 @@ std::string ofxNative::getSystemDocumentsFolder(){
 std::string ofxNative::getTempFolder(){
 	return string( NSTemporaryDirectory().UTF8String );
 }
+
+// originally from openFrameworks.
+// changed only to include file extensions
+ofFileDialogResult ofxNative::systemLoadDialog(std::string windowTitle, bool bFolderSelection, std::string defaultPath, std::vector<std::string> extensions){
+	ofFileDialogResult results;
+	NSOpenGLContext *context = [NSOpenGLContext currentContext];
+
+	NSOpenPanel * loadDialog = [NSOpenPanel openPanel];
+	[loadDialog setAllowsMultipleSelection:NO];
+	[loadDialog setCanChooseDirectories:bFolderSelection];
+	[loadDialog setCanChooseFiles:!bFolderSelection];
+	[loadDialog setResolvesAliases:YES];
+	if(extensions.size()>0){
+		NSMutableArray * nsextensions = [[NSMutableArray alloc] init];
+		for(std::string ext : extensions){
+			[nsextensions addObject:[NSString stringWithUTF8String:ext.c_str()]];
+		}
+		[loadDialog setAllowedFileTypes:nsextensions];
+	}
+	if(!windowTitle.empty()) {
+		[loadDialog setTitle:[NSString stringWithUTF8String:windowTitle.c_str()]];
+	}
+
+	if(!defaultPath.empty()) {
+		NSString * s = [NSString stringWithUTF8String:defaultPath.c_str()];
+		s = [[s stringByExpandingTildeInPath] stringByResolvingSymlinksInPath];
+		NSURL * defaultPathUrl = [NSURL fileURLWithPath:s];
+		[loadDialog setDirectoryURL:defaultPathUrl];
+	}
+
+	NSInteger buttonClicked = [loadDialog runModal];
+	[context makeCurrentContext];
+
+	restoreAppWindowFocus();
+
+	if(buttonClicked == NSFileHandlingPanelOKButton) {
+		NSURL * selectedFileURL = [[loadDialog URLs] objectAtIndex:0];
+		results.filePath = string([[selectedFileURL path] UTF8String]);
+	}
+
+	if( results.filePath.length() > 0 ){
+		results.bSuccess = true;
+		results.fileName = ofFilePath::getFileName(results.filePath);
+	}
+	
+	return results;
+}
+
+// originally from openFrameworks.
+// changed only to include file extensions
+ofFileDialogResult ofxNative::systemSaveDialog(string defaultName, string messageName, std::vector<std::string> extensions){
+
+	ofFileDialogResult results;
+
+	//----------------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------       OSX
+	//----------------------------------------------------------------------------------------
+	NSSavePanel * saveDialog = [NSSavePanel savePanel];
+	NSOpenGLContext *context = [NSOpenGLContext currentContext];
+	[saveDialog setMessage:[NSString stringWithUTF8String:messageName.c_str()]];
+	[saveDialog setNameFieldStringValue:[NSString stringWithUTF8String:defaultName.c_str()]];
+	if(extensions.size()>0){
+		NSMutableArray * nsextensions = [[NSMutableArray alloc] init];
+		for(std::string ext : extensions){
+			[nsextensions addObject:[NSString stringWithUTF8String:ext.c_str()]];
+		}
+		[saveDialog setAllowedFileTypes:nsextensions];
+	}
+	NSInteger buttonClicked = [saveDialog runModal];
+	restoreAppWindowFocus();
+	[context makeCurrentContext];
+
+	if(buttonClicked == NSFileHandlingPanelOKButton){
+		results.filePath = string([[[saveDialog URL] path] UTF8String]);
+	}
+
+	if( results.filePath.length() > 0 ){
+		results.bSuccess = true;
+		results.fileName = ofFilePath::getFileName(results.filePath);
+	}
+
+	return results;
+}
+
+
+// originally from openFrameworks.
+// changed only to include file extensions
+static void restoreAppWindowFocus(){
+	NSWindow * appWindow = (NSWindow *)ofGetCocoaWindow();
+	if(appWindow) {
+		[appWindow makeKeyAndOrderFront:nil];
+	}
+}
+
 #endif

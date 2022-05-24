@@ -59,5 +59,9 @@ namespace ofxNative{
 
 	// Returns the path to a temporary folder
 	std::string getTempFolder();
+	
+	ofFileDialogResult systemLoadDialog(std::string windowTitle="", bool bFolderSelection = false, std::string defaultPath="", std::vector<std::string> extensions = {});
+
+	ofFileDialogResult systemSaveDialog(string defaultName = "", string messageName = "", std::vector<std::string> extensions = {});
 
 }

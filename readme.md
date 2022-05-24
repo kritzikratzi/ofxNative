@@ -27,8 +27,9 @@ Method|Description|Windows|OSX|Linux
 `getConsoleVisible()`|Returns true if the console is visible|✓|✗|✗
 `setConsoleVisible(bool show)`|Shows/Hides the windows system console. This requires the linker flag `subsystem:console`|✓|✗|✗
 `getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, `%APPDATA%` on windows), `~/.local/share` on linux|✓|✓|✓
-`(getSystemDocumentsFolder)`|Returns the location of the user's documents folder|untested|✓|missing
-`(getTempFolder)`|Path to a system wide temp folder|untested|✓|untested
+`getSystemDocumentsFolder()`|Returns the location of the user's documents folder|untested|✓|missing
+`getTempFolder()`|Path to a system wide temp folder|untested|✓|untested
+`systemLoadDialog(std::string windowTitle, bool bFolderSelection, std::string defaultPath, std::vector<std::string> extensions)`|Shows the system "load file" system popup|✓|✓|✗
 
 ## Contributing
 
