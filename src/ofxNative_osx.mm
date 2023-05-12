@@ -15,6 +15,7 @@ static void restoreAppWindowFocus();
 
 void ofxNative::showFile( string path ){
 	NSString * file = [NSString stringWithUTF8String:path.c_str()];
+	file = [file stringByStandardizingPath];
 	NSURL * url = [NSURL fileURLWithPath:file];
 	NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
