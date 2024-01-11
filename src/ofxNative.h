@@ -64,4 +64,6 @@ namespace ofxNative{
 
 	ofFileDialogResult systemSaveDialog(string defaultName = "", string messageName = "", std::vector<std::string> extensions = {});
 
+	// can prevent/allow system sleep
+	void setAllowSystemSleep(bool allowSleep);
 }

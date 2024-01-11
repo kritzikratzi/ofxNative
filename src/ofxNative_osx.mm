@@ -1,4 +1,4 @@
-#ifdef __APPLE__
+#if defined(TARGET_OS_OSX) && TARGET_OS_OSX
 /**
  * OSX Implementation
  */
@@ -209,7 +209,6 @@ ofFileDialogResult ofxNative::systemSaveDialog(string defaultName, string messag
 
 
 // originally from openFrameworks.
-// changed only to include file extensions
 static void restoreAppWindowFocus(){
 	NSWindow * appWindow = (NSWindow *)ofGetCocoaWindow();
 	if(appWindow) {
