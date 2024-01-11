@@ -1,9 +1,10 @@
+#include "ofxNative.h"
+
 #if defined(TARGET_OS_IOS) && TARGET_OS_IOS
 /**
  * IOS Implementation
  */
 
-#include "ofxNative.h"
 #include "ofxiOSExtras.h"
 
 #include <pthread/pthread.h>

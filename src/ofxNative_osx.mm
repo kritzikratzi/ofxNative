@@ -1,12 +1,14 @@
+#include "ofxNative.h"
+
 #if defined(TARGET_OS_OSX) && TARGET_OS_OSX
 /**
  * OSX Implementation
  */
 
-#include "ofxNative.h"
 #include <Cocoa/Cocoa.h>
 #include <pthread/pthread.h>
 #include <Foundation/Foundation.h>
+#import <IOKit/pwr_mgt/IOPMLib.h>
 
 using namespace ofxNative;
 
@@ -207,6 +209,32 @@ ofFileDialogResult ofxNative::systemSaveDialog(string defaultName, string messag
 	return results;
 }
 
+void ofxNative::setAllowSystemSleep(bool allow_sleep){
+	static IOPMAssertionID assertion_id;
+	static bool did_prevent_sleep = false;
+	
+	if(!allow_sleep && !did_prevent_sleep){
+		NSString *app_name = [NSBundle mainBundle].infoDictionary[@"CFBundleDisplayName"];
+		CFStringRef cfstr_app_name = (__bridge CFStringRef)app_name;
+		IOReturn success = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
+											kIOPMAssertionLevelOn, cfstr_app_name, &assertion_id);
+		if(success==kIOReturnSuccess){
+			did_prevent_sleep = true;
+		}
+		else{
+			std::cerr << "Failed to prevent system sleep" << std::endl;
+		}
+	}
+	else if(allow_sleep && did_prevent_sleep){
+		IOReturn success = IOPMAssertionRelease(assertion_id);
+		if(success==kIOReturnSuccess){
+			did_prevent_sleep = false;
+		}
+		else{
+			std::cerr << "Failed to re-enable system sleep" << std::endl;
+		}
+	}
+}
 
 // originally from openFrameworks.
 static void restoreAppWindowFocus(){

@@ -29,8 +29,8 @@ Method|Description|Windows|macos|Linux|iOS
 `getSystemDataFolder()`|Returns a location in a global folder (Application-Support on OSX, `%APPDATA%` on windows), `~/.local/share` on linux|✓|✓|✓|✓
 `getSystemDocumentsFolder()`|Returns the location of the user's documents folder|untested|✓|missing|untested
 `getTempFolder()`|Path to a system wide temp folder|untested|✓|untested|untested
-`systemLoadDialog(std::string windowTitle, bool bFolderSelection, std::string defaultPath, std::vector<std::string> extensions)`|Shows the system "load file" system popup|✓|✓|✗|✗
-`setAllowSystemSleep(bool)`|Prevent screensaver/system sleep from happening|✗|✗|✗|✓
+`systemLoadDialog(std::string windowTitle, bool bFolderSelection, std::string defaultPath, std::vector<std::string> extensions)`|Shows the system's "load file" popup|✓|✓|✗|✗
+`setAllowSystemSleep(bool)`|Prevent screensaver/system sleep from happening|✗|✓|✗|✓
 
 ## Contributing
 
