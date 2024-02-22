@@ -17,14 +17,17 @@ void ofxNative::showFile( string path ){
 }
 
 
-
 void ofxNative::openFile( string path ){
 	NSString * file = [NSString stringWithUTF8String:path.c_str()];
 	CGRect rect = CGRectMake(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
-	int sz = [[[NSFileManager defaultManager] attributesOfItemAtPath:file error:nil] fileSize];
+	//int sz = [[[NSFileManager defaultManager] attributesOfItemAtPath:file error:nil] fileSize];
 	// from: http://developer.apple.com/library/ios/#documentation/FileManagement/Conceptual/DocumentInteraction_TopicsForIOS/Articles/PreviewingandOpeningItems.html#//apple_ref/doc/uid/TP40010410-SW1
-	UIDocumentInteractionController * interactionController =
-	[UIDocumentInteractionController interactionControllerWithURL: [NSURL fileURLWithPath:file]];
+	// using static is not the greatest solution,
+	// but we do this to retain the interactionController.
+	// i have no idea why a raw pointer even does anything, but it definitely does
+	// make a difference... in the sense that the static variable works, and a local one doesn't!
+	static UIDocumentInteractionController * interactionController;
+	interactionController = [UIDocumentInteractionController interactionControllerWithURL: [NSURL fileURLWithPath:file]];
 	[interactionController setUTI:@"com.microsoft.waveform-audio"];
 	//[interactionController setDelegate:self];
 	
